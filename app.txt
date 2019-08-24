@@ -1,0 +1,139 @@
+import React, { Component } from 'react';
+import { AppRegistry, FlatList, StyleSheet,Button, Text, View } from 'react-native';
+import { FAB, Portal,List,BottomNavigation, Provider,Appbar,TextInput } from 'react-native-paper';
+
+
+
+export default class FlatListBasics extends Component {
+
+ 
+  constructor(){
+    super(),
+    this.state={
+        
+         arr:[] ,
+         open: false,
+         text:null,
+         dd:null,
+    }
+  }
+
+  addvalue(){
+
+  if(this.state.text!=null){
+   this.state.arr.push(this.state.text);
+   this.setState({
+     text:null
+   })
+  }
+   else {
+     alert('Fill the field')
+   }
+}
+
+
+
+
+currentdataandtime = () => {
+    var that = this;
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+
+    var  dd=date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
+          //console.log(dd);
+    return (dd);
+  }
+
+
+  render() {
+    return (
+      <View style={styles.container}>
+      
+      <TextInput
+        style={{backgroundColor:'transparent'}}
+        label='Enter Text to Add'
+        value={this.state.text}
+        onChangeText={(text1) => this.setState({ text:text1 })}
+      />
+   
+
+        <FlatList
+       
+          data={this.state.arr.slice(',')}
+          
+          renderItem={  ({item} ) => 
+          
+         <List.Item
+         title=  {item}
+         onPress={()=>{
+              
+          this.state.arr.splice(this.state.arr.indexOf(item), 1);
+           this.setState({
+              arr:this.state.arr
+           })
+        
+
+         }}
+         
+          description= {this.currentdataandtime()}
+        
+        left={ 
+          props => 
+        <List.Icon {...props} 
+        icon="delete" 
+        />}
+           />
+
+        }
+        />
+
+
+
+        <Provider  style={{marginBottom:50,backgroundColor:'transparent'}}>
+         <Portal  style={{marginBottom:50,backgroundColor:'transparent'}}>
+           <FAB.Group
+          
+             open={this.state.open}
+             icon={this.state.open ? 'today' : 'add'}
+             actions={[
+               { icon: 'add', onPress: () => {this.addvalue} },
+               { icon: 'star', label: 'Star', onPress: () => {this.addvalue}},
+               { icon: 'email', label: 'Email', onPress: () => console.log('Pressed email') },
+               { icon: 'bell', label: 'Remind', onPress: () => console.log('Pressed notifications') },
+             ]}
+             onStateChange={() => {this.addvalue()}}
+             onPress={() => {
+               }}
+                 style={{marginBottom:50,backgroundColor:'transparent'}}
+           />
+         </Portal>
+      </Provider>
+
+      <Appbar  style={{backgroundColor:'transparent'}}>
+        <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')} />
+        <Appbar.Action icon="mail" onPress={() => console.log('Pressed mail')} />
+        <Appbar.Action icon="label" onPress={() => console.log('Pressed label')} />
+        <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')} />
+      </Appbar>
+
+
+      
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+   flex: 1,
+   paddingTop: 22
+  },
+  
+})
+
+// skip this line if using Create React Native App
+AppRegistry.registerComponent('AwesomeProject', () => FlatListBasics);
